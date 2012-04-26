@@ -25,13 +25,12 @@
 - (void)bounceNormalAnimationStopped;
 - (void)allAnimationsStopped;
 
-- (UIInterfaceOrientation)currentOrientation;
-- (void)sizeToFitOrientation:(UIInterfaceOrientation)orientation;
-- (CGAffineTransform)transformForOrientation:(UIInterfaceOrientation)orientation;
 - (BOOL)shouldRotateToOrientation:(UIInterfaceOrientation)orientation;
 
 - (void)addObservers;
 - (void)removeObservers;
+
+@property (nonatomic,readonly) UIInterfaceOrientation currentOrientation;
 
 @end
 
@@ -48,27 +47,27 @@
         // background settings
         [self setBackgroundColor:[UIColor clearColor]];
         [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-        
+
         // add the panel view
         panelView = [[UIView alloc] initWithFrame:CGRectMake(10, 30, 300, 440)];
         [panelView setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.55]];
         [[panelView layer] setMasksToBounds:NO]; // very important
         [[panelView layer] setCornerRadius:10.0];
         [self addSubview:panelView];
-        
+
         // add the conainer view
         containerView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 280, 420)];
-        [[containerView layer] setBorderColor:[UIColor colorWithRed:0. green:0. blue:0. alpha:0.7].CGColor];
-        [[containerView layer] setBorderWidth:1.0];
-        
-        
+        //[[containerView layer] setBorderColor:[UIColor colorWithRed:0. green:0. blue:0. alpha:0.7].CGColor];
+        //[[containerView layer] setBorderWidth:1.0];
+
         // add the web view
         webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 280, 390)];
+        webView.scalesPageToFit = YES;
 		[webView setDelegate:self];
 		[containerView addSubview:webView];
-        
+
         [panelView addSubview:containerView];
-        
+
         indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         [indicatorView setCenter:CGPointMake(160, 240)];
         [self addSubview:indicatorView];
@@ -94,91 +93,72 @@
 }
 
 #pragma mark Orientations
-
 - (UIInterfaceOrientation)currentOrientation
 {
     return [UIApplication sharedApplication].statusBarOrientation;
 }
 
-- (void)sizeToFitOrientation:(UIInterfaceOrientation)orientation
+- (BOOL)shouldRotateToOrientation:(UIInterfaceOrientation)orientation
 {
-    [self setTransform:CGAffineTransformIdentity];
-    
-    if (UIInterfaceOrientationIsLandscape(orientation))
+    if (orientation == previousOrientation)
     {
-        [self setFrame:CGRectMake(0, 0, 480, 320)];
-        [panelView setFrame:CGRectMake(10, 30, 460, 280)];
-        [containerView setFrame:CGRectMake(10, 10, 440, 260)];
-        [webView setFrame:CGRectMake(0, 0, 440, 260)];
-        [indicatorView setCenter:CGPointMake(240, 160)];
+        return NO;
     }
-    else
-    {
-        [self setFrame:CGRectMake(0, 0, 320, 480)];
-        [panelView setFrame:CGRectMake(10, 30, 300, 440)];
-        [containerView setFrame:CGRectMake(10, 10, 280, 420)];
-        [webView setFrame:CGRectMake(0, 0, 280, 420)];
-        [indicatorView setCenter:CGPointMake(160, 240)];
-    }
-    
-    [self setCenter:CGPointMake(160, 240)];
-    
-    [self setTransform:[self transformForOrientation:orientation]];
-    
-    previousOrientation = orientation;
-}
-
-- (CGAffineTransform)transformForOrientation:(UIInterfaceOrientation)orientation
-{  
-	if (orientation == UIInterfaceOrientationLandscapeLeft)
-    {
-		return CGAffineTransformMakeRotation(-M_PI / 2);
-	}
-    else if (orientation == UIInterfaceOrientationLandscapeRight)
-    {
-		return CGAffineTransformMakeRotation(M_PI / 2);
-	}
-    else if (orientation == UIInterfaceOrientationPortraitUpsideDown)
-    {
-		return CGAffineTransformMakeRotation(-M_PI);
-	}
-    else
-    {
-		return CGAffineTransformIdentity;
-	}
-}
-
-- (BOOL)shouldRotateToOrientation:(UIInterfaceOrientation)orientation 
-{
-	if (orientation == previousOrientation)
-    {
-		return NO;
-	}
-    else
-    {
-		return orientation == UIInterfaceOrientationLandscapeLeft
-		|| orientation == UIInterfaceOrientationLandscapeRight
-		|| orientation == UIInterfaceOrientationPortrait
-		|| orientation == UIInterfaceOrientationPortraitUpsideDown;
-	}
     return YES;
 }
 
-#pragma mark Obeservers
+- (void)deviceOrientationDidChange:(id)object
+{
+    if (![self shouldRotateToOrientation:self.currentOrientation]) {
+        return;
+    }
 
+    previousOrientation = self.currentOrientation;
+
+    [UIView beginAnimations:nil context:nil];
+    [self layoutSubviews];
+    [UIView commitAnimations];
+}
+
+#pragma mark Obeservers
 - (void)addObservers
 {
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(deviceOrientationDidChange:)
-												 name:@"UIDeviceOrientationDidChangeNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(deviceOrientationDidChange:)
+                                                 name:@"UIDeviceOrientationDidChangeNotification"
+                                               object:nil];
 }
 
 - (void)removeObservers
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-													name:@"UIDeviceOrientationDidChangeNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"UIDeviceOrientationDidChangeNotification"
+                                                  object:nil];
 }
 
+#pragma mark subview layout
+- (void)layoutSubviews
+{
+    int offsetA = 20, offsetB = 40, offsetC = 60, offsetD = 90;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        offsetA >>= 1;
+        offsetB >>= 1;
+        offsetC >>= 1;
+        offsetD = 40;
+    }
+
+    CGPoint center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+    panelView.center = center;
+    panelView.bounds = CGRectMake(0, 0, self.bounds.size.width - offsetA, self.bounds.size.height - offsetC);
+
+    containerView.center = CGPointMake(panelView.bounds.size.width/2, panelView.bounds.size.height/2);
+    containerView.bounds = CGRectMake(0, 0, self.bounds.size.width - offsetB, self.bounds.size.height - offsetC);
+
+    webView.center = CGPointMake(containerView.bounds.size.width/2, containerView.bounds.size.height/2);;
+    webView.bounds = CGRectMake(0, 0, self.bounds.size.width - offsetB, self.bounds.size.height - offsetD);
+    
+    indicatorView.center = center;
+}
 
 #pragma mark Animations
 
@@ -211,7 +191,7 @@
 
 - (void)allAnimationsStopped
 {
-    // nothing shall be done here
+    [self layoutSubviews];
 }
 
 #pragma mark Dismiss
@@ -234,15 +214,10 @@
 
 - (void)show:(BOOL)animated
 {
-    [self sizeToFitOrientation:[self currentOrientation]];
-    
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
-	if (!window)
-    {
-		window = [[UIApplication sharedApplication].windows objectAtIndex:0];
-	}
-  	[window addSubview:self];
-    
+    UIViewController *controller = self.delegate.rootViewController;
+    [controller.view addSubview:self];
+    self.frame = controller.view.bounds;
+
     if (animated)
     {
         [panelView setAlpha:0];
@@ -260,7 +235,7 @@
     {
         [self allAnimationsStopped];
     }
-    
+
     [self addObservers];
 }
 
@@ -276,23 +251,6 @@
 		[UIView commitAnimations];
 	} 
     [self hideAndCleanUp];
-}
-
-#pragma mark - UIDeviceOrientationDidChangeNotification Methods
-
-- (void)deviceOrientationDidChange:(id)object
-{
-	UIInterfaceOrientation orientation = [self currentOrientation];
-	if ([self shouldRotateToOrientation:orientation])
-    {
-        NSTimeInterval duration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
-    
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:duration];
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-		[self sizeToFitOrientation:orientation];
-		[UIView commitAnimations];
-	}
 }
 
 #pragma mark - UIWebViewDelegate Methods
