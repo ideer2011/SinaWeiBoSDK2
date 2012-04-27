@@ -50,6 +50,7 @@
 @property (nonatomic, retain) NSString *appKey;
 @property (nonatomic, retain) NSString *appSecret;
 @property (nonatomic, retain) NSString *redirectURI;
+@property (nonatomic, retain) NSString *state;
 @property (nonatomic, retain) WBRequest *request;
 @property (nonatomic, assign) UIViewController *rootViewController;
 @property (nonatomic, assign) id<WBAuthorizeDelegate> delegate;

@@ -83,6 +83,7 @@
 @property (nonatomic, retain) NSString *accessToken;
 @property (nonatomic, assign) NSTimeInterval expireTime;
 @property (nonatomic, retain) NSString *redirectURI;
+@property (nonatomic, retain) NSString *state;
 @property (nonatomic, assign) BOOL isUserExclusive;
 @property (nonatomic, retain) WBRequest *request;
 @property (nonatomic, retain) WBAuthorize *authorize;

@@ -35,6 +35,7 @@
 @synthesize appKey;
 @synthesize appSecret;
 @synthesize redirectURI;
+@synthesize state;
 @synthesize request;
 @synthesize rootViewController;
 @synthesize delegate;
@@ -58,6 +59,7 @@
     [appSecret release], appSecret = nil;
     
     [redirectURI release], redirectURI = nil;
+    [state release], state = nil;
     
     [request setDelegate:nil];
     [request disconnect];
@@ -120,10 +122,14 @@
 
 - (void)startAuthorize
 {
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:appKey, @"client_id",
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:appKey, @"client_id",
                                                                       @"code", @"response_type",
                                                                       redirectURI, @"redirect_uri", 
                                                                       @"mobile", @"display", nil];
+    if (state) {
+        [params setObject:state forKey:@"state"];
+    }
+
     NSString *urlString = [WBRequest serializeURL:kWBAuthorizeURL
                                            params:params
                                        httpMethod:@"GET"];

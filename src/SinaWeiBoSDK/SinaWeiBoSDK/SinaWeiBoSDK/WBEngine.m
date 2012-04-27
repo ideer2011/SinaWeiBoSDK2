@@ -45,6 +45,7 @@
 @synthesize accessToken;
 @synthesize expireTime;
 @synthesize redirectURI;
+@synthesize state;
 @synthesize isUserExclusive;
 @synthesize request;
 @synthesize authorize;
@@ -77,6 +78,7 @@
     [accessToken release], accessToken = nil;
     
     [redirectURI release], redirectURI = nil;
+    [state release], state = nil;
     
     [request setDelegate:nil];
     [request disconnect];
@@ -158,6 +160,7 @@
     {
         [authorize setRedirectURI:@"http://"];
     }
+    authorize.state = state;
     
     [authorize startAuthorize];
 }
