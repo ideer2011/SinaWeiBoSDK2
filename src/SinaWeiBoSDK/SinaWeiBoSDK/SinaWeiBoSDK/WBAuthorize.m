@@ -151,10 +151,13 @@
 - (void)authorizeWebView:(WBAuthorizeWebView *)webView didReceiveAuthorizeCode:(NSString *)code
 {
     [webView hide:YES];
-    
     // if not canceled
     if (![code isEqualToString:@"21330"])
     {
+        if ([delegate respondsToSelector:@selector(authorize:didReceiveAuthorizeCode:)]) {
+            [delegate authorize:self didReceiveAuthorizeCode:code];
+        }
+
         [self requestAccessTokenWithAuthorizeCode:code];
     }
 }

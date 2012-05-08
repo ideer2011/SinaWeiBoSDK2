@@ -30,6 +30,9 @@
 
 - (void)authorize:(WBAuthorize *)authorize didFailWithError:(NSError *)error;
 
+@optional
+- (void)authorize:(WBAuthorize *)authorize didReceiveAuthorizeCode:(NSString *)code;
+
 @end
 
 @interface WBAuthorize : NSObject <WBAuthorizeWebViewDelegate, WBRequestDelegate> 

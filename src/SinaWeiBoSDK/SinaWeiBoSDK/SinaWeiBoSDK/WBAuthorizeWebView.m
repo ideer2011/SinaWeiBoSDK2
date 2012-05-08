@@ -263,6 +263,18 @@
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView
 {
 	[indicatorView stopAnimating];
+
+    NSRange range = [aWebView.request.URL.absoluteString rangeOfString:@"code="];
+
+    if (range.location != NSNotFound)
+    {
+        NSString *code = [aWebView.request.URL.absoluteString substringFromIndex:range.location + range.length];
+
+        if ([delegate respondsToSelector:@selector(authorizeWebView:didReceiveAuthorizeCode:)])
+        {
+            [delegate authorizeWebView:self didReceiveAuthorizeCode:code];
+        }
+    }
 }
 
 - (void)webView:(UIWebView *)aWebView didFailLoadWithError:(NSError *)error
@@ -270,7 +282,7 @@
     [indicatorView stopAnimating];
 }
 
-- (BOOL)webView:(UIWebView *)aWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+/*- (BOOL)webView:(UIWebView *)aWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     NSRange range = [request.URL.absoluteString rangeOfString:@"code="];
     
@@ -285,6 +297,6 @@
     }
     
     return YES;
-}
+}*/
 
 @end

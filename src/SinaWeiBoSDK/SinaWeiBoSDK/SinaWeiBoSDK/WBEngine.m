@@ -43,6 +43,7 @@
 @synthesize appSecret;
 @synthesize userID;
 @synthesize accessToken;
+@synthesize authorizeCode;
 @synthesize expireTime;
 @synthesize redirectURI;
 @synthesize state;
@@ -76,6 +77,7 @@
     
     [userID release], userID = nil;
     [accessToken release], accessToken = nil;
+    [authorizeCode release], authorizeCode = nil;
     
     [redirectURI release], redirectURI = nil;
     [state release], state = nil;
@@ -311,6 +313,11 @@
     {
         [delegate engineDidLogIn:self];
     }
+}
+
+- (void)authorize:(WBAuthorize *)authorize didReceiveAuthorizeCode:(NSString *)code
+{
+    self.authorizeCode = code;
 }
 
 - (void)authorize:(WBAuthorize *)authorize didFailWithError:(NSError *)error
