@@ -25,11 +25,7 @@
 @protocol WBSendViewDelegate <NSObject>
 
 @optional
-
-- (void)sendViewWillAppear:(WBSendView *)view;
-- (void)sendViewDidAppear:(WBSendView *)view;
-- (void)sendViewWillDisappear:(WBSendView *)view;
-- (void)sendViewDidDisappear:(WBSendView *)view;
+- (void)sendViewDidRequestClose:(WBSendView *)view;
 
 - (void)sendViewDidFinishSending:(WBSendView *)view;
 - (void)sendView:(WBSendView *)view didFailWithError:(NSError *)error;
@@ -44,28 +40,29 @@
 {
     
     UITextView  *contentTextView;
+    UIView      *contentImageContainerView;
     UIImageView *contentImageView;
-    
+
     UIButton    *sendButton;
     UIButton    *closeButton;
     UIButton    *clearTextButton;
     UIButton    *clearImageButton;
-    
+
     UILabel     *titleLabel;
     UILabel     *wordCountLabel;
-    
+
     UIView      *panelView;
     UIImageView *panelImageView;
-    
+
     NSString    *contentText;
     UIImage     *contentImage;
-    
+
     UIInterfaceOrientation previousOrientation;
-    
+
     BOOL        isKeyboardShowing;
-    
+
     WBEngine    *engine;
-    
+
     id<WBSendViewDelegate> delegate;
 }
 
@@ -74,8 +71,5 @@
 @property (nonatomic, assign) id<WBSendViewDelegate> delegate;
 
 - (id)initWithAppKey:(NSString *)appKey appSecret:(NSString *)appSecret text:(NSString *)text image:(UIImage *)image;
-
-- (void)show:(BOOL)animated;
-- (void)hide:(BOOL)animated;
 
 @end
