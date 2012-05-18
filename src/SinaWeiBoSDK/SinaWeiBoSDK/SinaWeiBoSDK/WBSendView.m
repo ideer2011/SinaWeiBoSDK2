@@ -159,7 +159,7 @@
     return self;
 }
 
-- (void)dealloc
+/*- (void)dealloc
 {
     [engine setDelegate:nil];
     [engine release], engine = nil;
@@ -178,7 +178,7 @@
     delegate = nil;
 
     [super dealloc];
-}
+}*/
 
 - (void)setContentImage:(UIImage *)image
 {
@@ -245,7 +245,7 @@
                                                             delegate:nil
                                                    cancelButtonTitle:NSLocalizedString(@"确定", nil) otherButtonTitles:nil];
 		[alertView show];
-		[alertView release];
+		//[alertView release];
 		return;
 	}
     
@@ -262,7 +262,8 @@
 {
     [contentImageContainerView setHidden:YES];
     [clearImageButton setHidden:YES];
-	[contentImage release], contentImage = nil;
+    [self setContentImage:nil];
+	//[contentImage release], contentImage = nil;
 }
 
 #pragma mark Text Length

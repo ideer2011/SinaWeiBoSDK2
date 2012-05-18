@@ -63,12 +63,12 @@
 
     WBEngine    *engine;
 
-    id<WBSendViewDelegate> delegate;
+    //id<WBSendViewDelegate> delegate;
 }
 
-@property (nonatomic, retain) NSString *contentText;
-@property (nonatomic, retain) UIImage *contentImage;
-@property (nonatomic, assign) id<WBSendViewDelegate> delegate;
+@property (nonatomic, strong) NSString *contentText;
+@property (nonatomic, strong) UIImage *contentImage;
+@property (nonatomic, weak) id<WBSendViewDelegate> delegate;
 
 - (id)initWithAppKey:(NSString *)appKey appSecret:(NSString *)appSecret text:(NSString *)text image:(UIImage *)image;
 
