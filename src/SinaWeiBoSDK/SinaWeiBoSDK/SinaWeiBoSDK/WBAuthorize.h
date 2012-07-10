@@ -31,7 +31,7 @@
 - (void)authorize:(WBAuthorize *)authorize didFailWithError:(NSError *)error;
 
 @optional
-- (void)authorize:(WBAuthorize *)authorize didReceiveAuthorizeCode:(NSString *)code;
+- (void)authorize:(WBAuthorize *)authorize didReceiveAuthorizeCode:(NSString *)code contents:(NSString *)contents;
 
 @end
 

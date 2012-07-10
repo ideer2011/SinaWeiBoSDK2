@@ -82,6 +82,7 @@
 @property (nonatomic, retain) NSString *userID;
 @property (nonatomic, retain) NSString *accessToken;
 @property (nonatomic, retain) NSString *authorizeCode;
+@property (nonatomic, retain) NSString *authorizeResponseContents;
 @property (nonatomic, assign) NSTimeInterval expireTime;
 @property (nonatomic, retain) NSString *redirectURI;
 @property (nonatomic, retain) NSString *state;

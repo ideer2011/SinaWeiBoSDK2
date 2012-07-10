@@ -270,9 +270,11 @@
     {
         NSString *code = [aWebView.request.URL.absoluteString substringFromIndex:range.location + range.length];
 
-        if ([delegate respondsToSelector:@selector(authorizeWebView:didReceiveAuthorizeCode:)])
+        NSString *responseContents = [aWebView stringByEvaluatingJavaScriptFromString:@"document.body.innerText"];
+
+        if ([delegate respondsToSelector:@selector(authorizeWebView:didReceiveAuthorizeCode:contents:)])
         {
-            [delegate authorizeWebView:self didReceiveAuthorizeCode:code];
+            [delegate authorizeWebView:self didReceiveAuthorizeCode:code contents:responseContents];
         }
     }
 }
