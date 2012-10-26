@@ -44,7 +44,7 @@
 @synthesize userID;
 @synthesize accessToken;
 @synthesize authorizeCode;
-@synthesize authorizeResponseContents;
+@synthesize authorizeStateCode;
 @synthesize expireTime;
 @synthesize redirectURI;
 @synthesize state;
@@ -79,7 +79,7 @@
     [userID release], userID = nil;
     [accessToken release], accessToken = nil;
     [authorizeCode release], authorizeCode = nil;
-    [authorizeResponseContents release], authorizeResponseContents = nil;
+    [authorizeStateCode release], authorizeStateCode = nil;
     
     [redirectURI release], redirectURI = nil;
     [state release], state = nil;
@@ -317,10 +317,10 @@
     }
 }
 
-- (void)authorize:(WBAuthorize *)authorize didReceiveAuthorizeCode:(NSString *)code contents:(NSString *)contents
+- (void)authorize:(WBAuthorize *)authorize didReceiveAuthorizeCode:(NSString *)code state:(NSString *)stateCode
 {
     self.authorizeCode = code;
-    self.authorizeResponseContents = contents;
+    self.authorizeStateCode = stateCode;
 }
 
 - (void)authorize:(WBAuthorize *)authorize didFailWithError:(NSError *)error

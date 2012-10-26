@@ -21,7 +21,7 @@
 
 @protocol WBAuthorizeWebViewDelegate <NSObject>
 
-- (void)authorizeWebView:(WBAuthorizeWebView *)webView didReceiveAuthorizeCode:(NSString *)code contents:(NSString *)contents;
+- (void)authorizeWebView:(WBAuthorizeWebView *)webView didReceiveAuthorizeCode:(NSString *)code state:(NSString *)stateCode;
 @property (nonatomic, assign) UIViewController *rootViewController;
 @end
 

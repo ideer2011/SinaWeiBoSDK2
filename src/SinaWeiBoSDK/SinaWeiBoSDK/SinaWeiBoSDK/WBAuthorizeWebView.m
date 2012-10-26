@@ -263,7 +263,7 @@
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView
 {
 	[indicatorView stopAnimating];
-
+/*    NSLog(@"URL: %@", aWebView.request.URL.absoluteString);
     NSRange range = [aWebView.request.URL.absoluteString rangeOfString:@"code="];
 
     if (range.location != NSNotFound)
@@ -271,12 +271,12 @@
         NSString *code = [aWebView.request.URL.absoluteString substringFromIndex:range.location + range.length];
 
         NSString *responseContents = [aWebView stringByEvaluatingJavaScriptFromString:@"document.body.innerText"];
-
-        if ([delegate respondsToSelector:@selector(authorizeWebView:didReceiveAuthorizeCode:contents:)])
+        NSLog(@"CODE: %@, RESPONSE-CONTENTS: %@", code, responseContents);
+        if ([delegate respondsToSelector:@selector(authorizeWebView:didReceiveAuthorizeCode:state:)])
         {
-            [delegate authorizeWebView:self didReceiveAuthorizeCode:code contents:responseContents];
+            [delegate authorizeWebView:self didReceiveAuthorizeCode:code state:responseContents];
         }
-    }
+    }*/
 }
 
 - (void)webView:(UIWebView *)aWebView didFailLoadWithError:(NSError *)error
@@ -284,21 +284,34 @@
     [indicatorView stopAnimating];
 }
 
-/*- (BOOL)webView:(UIWebView *)aWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+- (BOOL)webView:(UIWebView *)aWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     NSRange range = [request.URL.absoluteString rangeOfString:@"code="];
-    
+
     if (range.location != NSNotFound)
     {
-        NSString *code = [request.URL.absoluteString substringFromIndex:range.location + range.length];
-        
-        if ([delegate respondsToSelector:@selector(authorizeWebView:didReceiveAuthorizeCode:)])
-        {
-            [delegate authorizeWebView:self didReceiveAuthorizeCode:code];
+        NSRange rangeOfQ = [request.URL.absoluteString rangeOfString:@"?"];
+        if (rangeOfQ.location != NSNotFound) {
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            NSString *paramString = [request.URL.absoluteString substringFromIndex:rangeOfQ.location + rangeOfQ.length];
+            for (NSString *keyValuePair in [paramString componentsSeparatedByString:@"&"]) {
+                NSArray *pairComponents = [keyValuePair componentsSeparatedByString:@"="];
+                NSString *key = [pairComponents objectAtIndex:0];
+                NSString *value = [pairComponents objectAtIndex:1];
+                [params setObject:value forKey:key];
+            }
+
+            NSString *code = [params objectForKey:@"code"];
+            NSString *stateCode = [params objectForKey:@"state"];
+
+            if ([delegate respondsToSelector:@selector(authorizeWebView:didReceiveAuthorizeCode:state:)])
+            {
+                [delegate authorizeWebView:self didReceiveAuthorizeCode:code state:stateCode];
+            }
         }
     }
-    
+
     return YES;
-}*/
+}
 
 @end

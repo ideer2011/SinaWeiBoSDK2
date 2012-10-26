@@ -148,14 +148,14 @@
 
 #pragma mark - WBAuthorizeWebViewDelegate Methods
 
-- (void)authorizeWebView:(WBAuthorizeWebView *)webView didReceiveAuthorizeCode:(NSString *)code contents:(NSString *)contents
+- (void)authorizeWebView:(WBAuthorizeWebView *)webView didReceiveAuthorizeCode:(NSString *)code state:(NSString *)stateCode
 {
     [webView hide:YES];
     // if not canceled
     if (![code isEqualToString:@"21330"])
     {
-        if ([delegate respondsToSelector:@selector(authorize:didReceiveAuthorizeCode:contents:)]) {
-            [delegate authorize:self didReceiveAuthorizeCode:code contents:contents];
+        if ([delegate respondsToSelector:@selector(authorize:didReceiveAuthorizeCode:state:)]) {
+            [delegate authorize:self didReceiveAuthorizeCode:code state:stateCode];
         }
 
         [self requestAccessTokenWithAuthorizeCode:code];
